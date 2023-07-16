@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    env_file:
+      - ./.env.dev
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile-celery-worker
+    depends_on:
+      - redis
+
+  beat:
+    build:
+      context: .
+      dockerfile: Dockerfile-celery-beat
+    depends_on:
+      - redis
+
+#  flower:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile-flower
+#    ports:
+#      - "5555:5555"
+#    depends_on:
+#      - redis
+
+  redis:
+    image: redis:6
